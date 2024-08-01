@@ -23,8 +23,8 @@ MAX6675 thermocouple(thermoCLK, thermoCS, thermoDO);
 unsigned long previousMillis = 0;
 const long interval = 1000;  // Update interval (milliseconds)
 float targetTemp = 25.0;  // Initial target temperature
-float currentTemp = 0.0;
-const float hysteresis = 1.0;  // Temperature range for relay control
+float currentTemp = 25.0;
+const float hysteresis = 3.0;  // Temperature range for relay control
 bool relayState = false;
 
 // Button debounce variables
@@ -68,10 +68,10 @@ void loop() {
     currentTemp = thermocouple.readCelsius();
 
     // Control relay based on temperature
-    if (currentTemp < targetTemp - hysteresis && !relayState) {
+    if (currentTemp < targetTemp - hysteresis) {
       digitalWrite(relayPin, HIGH);  // Turn on heating
       relayState = true;
-    } else if (currentTemp > targetTemp + hysteresis && relayState) {
+    } else {
       digitalWrite(relayPin, LOW);  // Turn off heating
       relayState = false;
     }
